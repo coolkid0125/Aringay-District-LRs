@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Aringay District LRs</title>
-  <!-- Browser Tab Favicon -->
-  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
-  <link rel="shortcut icon" type="image/png" href="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
-  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
+  <title id="pageTitle"><?= (typeof config !== 'undefined' && config.districtName) ? config.districtName + ' LRs' : 'DepEd District LRs' ?></title>
+  
+  <!-- Dynamic Browser Tab Favicon -->
+  <link id="browserFavicon" rel="icon" type="image/png" href="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>">
+  <link rel="shortcut icon" type="image/png" href="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>">
+  <link rel="apple-touch-icon" href="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>">
+  
   <!-- Tailwind CSS, Chart.js & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,26 +19,14 @@
       input, select, textarea { font-size: 16px !important; }
     }
     @media print {
-      body * {
-        visibility: hidden !important;
-      }
-      #printArea, #printArea * {
-        visibility: visible !important;
-      }
+      body * { visibility: hidden !important; }
+      #printArea, #printArea * { visibility: visible !important; }
       #printArea {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        display: block !important;
-        background: white !important;
-        color: black !important;
-        padding: 10px !important;
+        position: absolute !important; left: 0 !important; top: 0 !important;
+        width: 100% !important; display: block !important; background: white !important;
+        color: black !important; padding: 10px !important;
       }
-      @page {
-        margin: 12mm;
-        size: auto;
-      }
+      @page { margin: 12mm; size: auto; }
     }
   </style>
 </head>
@@ -46,19 +36,26 @@
   <header class="bg-gradient-to-r from-blue-900 via-indigo-800 to-indigo-900 text-white shadow-lg sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-3">
       
-      <!-- Brand & District Logo -->
+      <!-- Dynamic Brand & District Logo -->
       <div class="flex items-center space-x-3">
-        <img src="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz" 
-             alt="Aringay District Logo" 
+        <img id="headerDistrictLogo" 
+             src="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>" 
+             alt="District Logo" 
              class="w-10 h-10 sm:w-12 sm:h-12 object-contain bg-white/10 rounded-full p-1 border border-white/20 shadow-sm cursor-pointer shrink-0"
-             onclick="openLightbox('https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz')"
-             onerror="this.src='https://placehold.co/48x48?text=AD';">
+             onclick="openLightbox(this.src)"
+             onerror="this.src='https://placehold.co/48x48?text=Logo';">
         <div>
           <div class="flex items-center gap-1.5">
-            <span class="text-[10px] uppercase tracking-widest text-indigo-200 font-semibold">DepEd Region I</span>
-            <span class="text-[9px] bg-indigo-500/40 px-1.5 py-0.2 rounded text-indigo-100">La Union</span>
+            <span id="headerRegion" class="text-[10px] uppercase tracking-widest text-indigo-200 font-semibold">
+              DepEd <?= (typeof config !== 'undefined' && config.region) ? config.region : 'Region I' ?>
+            </span>
+            <span id="headerDivision" class="text-[9px] bg-indigo-500/40 px-1.5 py-0.2 rounded text-indigo-100">
+              <?= (typeof config !== 'undefined' && config.division) ? config.division.replace(/^Schools Division of\s*/i, '') : 'La Union' ?>
+            </span>
           </div>
-          <h1 class="text-lg sm:text-2xl font-black tracking-tight leading-tight">Aringay District</h1>
+          <h1 id="headerDistrictName" class="text-lg sm:text-2xl font-black tracking-tight leading-tight">
+            <?= (typeof config !== 'undefined' && config.districtName) ? config.districtName : 'Aringay District' ?>
+          </h1>
           <p class="text-[10px] sm:text-xs text-indigo-200">Learning Resources (LRs) Repository</p>
         </div>
       </div>
@@ -97,7 +94,7 @@
       <div class="flex items-start gap-3">
         <i class="fa-solid fa-circle-exclamation text-red-500 text-xl mt-0.5"></i>
         <div>
-          <h4 class="text-sm font-bold text-red-900">Connection Notice</h4>
+          <h4 class="text-sm font-bold text-red-900">Notice</h4>
           <p id="error-message" class="text-xs text-red-700 mt-0.5"></p>
         </div>
       </div>
@@ -111,7 +108,7 @@
   <div id="loader" class="flex flex-col items-center justify-center my-auto py-20 px-4 text-center">
     <div class="text-5xl animate-bounce mb-3" id="loading-emoji">📚</div>
     <div class="animate-spin rounded-full h-10 w-10 border-4 border-indigo-600 border-t-transparent mb-3"></div>
-    <p id="loading-text" class="text-sm font-semibold text-slate-700">Connecting to Aringay District repository...</p>
+    <p id="loading-text" class="text-sm font-semibold text-slate-700">Connecting to Learning Resources repository...</p>
     <p id="loading-timer" class="text-xs text-slate-400 mt-1">Connecting... (<span id="elapsedSecs">0</span>s)</p>
 
     <div id="timeout-hint" class="hidden mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 max-w-sm">
@@ -126,7 +123,7 @@
   <!-- Main Container -->
   <main id="dashboard" class="hidden max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 space-y-6 flex-1 w-full">
 
-    <!-- ==================== TAB 1: DISTRICT DATA ==================== -->
+    <!-- TAB 1: DISTRICT DATA -->
     <section id="section-district" class="space-y-4">
       
       <!-- Filters Bar -->
@@ -172,7 +169,7 @@
               </button>
             </div>
 
-            <!-- Prominent Eye-Catching Print District Report Button -->
+            <!-- High-Visibility Emerald Print District Report Button -->
             <button onclick="openDistrictPrintModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md hover:shadow-lg ring-2 ring-emerald-400/40 transition active:scale-95">
               <i class="fa-solid fa-print text-amber-300 text-sm"></i> <span>Print Report</span>
             </button>
@@ -213,16 +210,14 @@
         <p class="text-sm font-semibold text-slate-700">No matching learning resources found</p>
       </div>
 
-      <!-- District Pagination Controls with Number Buttons -->
+      <!-- District Pagination Controls -->
       <div id="pagination-container" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p id="page-info" class="text-xs text-slate-600 font-medium"></p>
         <div class="inline-flex items-center gap-1.5 flex-wrap justify-center">
           <button id="prev-page-btn" onclick="changePage(-1)" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs transition flex items-center gap-1">
             <i class="fa-solid fa-chevron-left text-[10px]"></i> Prev
           </button>
-          
           <div id="district-page-numbers" class="inline-flex items-center gap-1 flex-wrap justify-center"></div>
-
           <button id="next-page-btn" onclick="changePage(1)" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs transition flex items-center gap-1">
             Next <i class="fa-solid fa-chevron-right text-[10px]"></i>
           </button>
@@ -231,7 +226,7 @@
 
     </section>
 
-    <!-- ==================== TAB 2: SCHOOL DATA ==================== -->
+    <!-- TAB 2: SCHOOL DATA -->
     <section id="section-school" class="hidden space-y-5">
       
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 space-y-3">
@@ -258,13 +253,14 @@
           <div class="relative w-16 h-16 sm:w-20 sm:h-20 bg-white/10 rounded-2xl border-2 border-white/20 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-inner cursor-pointer"
                onclick="openLightbox(document.getElementById('schoolActiveLogo').src)">
             <img id="schoolActiveLogo" src="" 
+                 decoding="async" loading="lazy"
                  alt="School Logo" 
                  class="w-full h-full object-contain rounded-xl"
                  onerror="this.src='https://placehold.co/100x100?text=School';">
           </div>
           <div>
-            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
-              Aringay District School
+            <span id="schoolDistrictBadge" class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
+              District School
             </span>
             <h2 id="schoolActiveName" class="text-lg sm:text-2xl font-black tracking-tight leading-tight mt-1">Select a School</h2>
             <p class="text-xs text-indigo-200">Allocated Learning Resources Inventory</p>
@@ -319,7 +315,7 @@
               </button>
             </div>
 
-            <!-- Prominent High-Visibility Print School Inventory Button -->
+            <!-- High-Visibility Emerald Print School Inventory Button -->
             <button onclick="openSchoolPrintModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md hover:shadow-lg ring-2 ring-emerald-400/40 transition active:scale-95">
               <i class="fa-solid fa-print text-amber-300 text-sm"></i> <span>Print School Inventory</span>
             </button>
@@ -360,16 +356,14 @@
         <p class="text-xs text-slate-400 mt-1">This school has 0 distributed copies recorded for this selection.</p>
       </div>
 
-      <!-- School Pagination Controls with Number Buttons -->
+      <!-- School Pagination Controls -->
       <div id="school-pagination-container" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p id="school-page-info" class="text-xs text-slate-600 font-medium"></p>
         <div class="inline-flex items-center gap-1.5 flex-wrap justify-center">
           <button id="school-prev-page-btn" onclick="changeSchoolPage(-1)" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs transition flex items-center gap-1">
             <i class="fa-solid fa-chevron-left text-[10px]"></i> Prev
           </button>
-          
           <div id="school-page-numbers" class="inline-flex items-center gap-1 flex-wrap justify-center"></div>
-
           <button id="school-next-page-btn" onclick="changeSchoolPage(1)" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs transition flex items-center gap-1">
             Next <i class="fa-solid fa-chevron-right text-[10px]"></i>
           </button>
@@ -378,7 +372,7 @@
 
     </section>
 
-    <!-- ==================== TAB 3: STATISTICS & GRAPHS ==================== -->
+    <!-- TAB 3: STATISTICS & GRAPHS -->
     <section id="section-stats" class="hidden space-y-6">
       
       <!-- Top 3 KPI Cards -->
@@ -414,7 +408,7 @@
         </div>
       </div>
 
-      <!-- Pie Charts: Subjects & Ordered Grade Levels -->
+      <!-- Pie Charts -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 flex flex-col">
           <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2 mb-2">
@@ -438,14 +432,14 @@
         </div>
       </div>
 
-      <!-- School Distribution Ranking Horizontal Bar Chart Card -->
+      <!-- School Ranking Chart -->
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-6 flex flex-col space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
           <div>
             <h2 class="text-sm sm:base font-bold text-slate-900 flex items-center gap-2">
               <i class="fa-solid fa-ranking-star text-amber-500"></i> School Distribution Ranking
             </h2>
-            <p class="text-xs text-slate-500">Total learning resource copies allocated across all recipient schools (Ranked Highest to Lowest)</p>
+            <p class="text-xs text-slate-500">Total copies allocated across recipient schools (Ranked Highest to Lowest)</p>
           </div>
           <div id="topSchoolBadge" class="hidden text-xs bg-amber-50 text-amber-900 border border-amber-200 px-3 py-1.5 rounded-full font-semibold shadow-xs self-start sm:self-auto"></div>
         </div>
@@ -459,7 +453,7 @@
 
   </main>
 
-  <!-- DISTRIBUTION BREAKDOWN MODAL WITH EDIT/DELETE BUTTON -->
+  <!-- DISTRIBUTION BREAKDOWN MODAL -->
   <div id="distModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-150">
       <div class="p-4 border-b border-slate-200 flex justify-between items-start bg-slate-50">
@@ -724,7 +718,7 @@
     </div>
   </div>
 
-  <!-- PRINT SETUP MODAL: DISTRICT TAB -->
+  <!-- PRINT MODAL: DISTRICT TAB -->
   <div id="districtPrintModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-5 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -761,7 +755,7 @@
     </div>
   </div>
 
-  <!-- PRINT SETUP MODAL: SCHOOL TAB -->
+  <!-- PRINT MODAL: SCHOOL TAB -->
   <div id="schoolPrintModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-5 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -820,7 +814,7 @@
   </button>
 
   <footer class="bg-white border-t border-slate-200 py-3.5 text-center text-xs text-slate-500 mt-auto">
-    DepEd Aringay District Learning Resources Management System • Powered by Google Apps Script
+    <span id="footerDistrictLabel">DepEd Learning Resources Management System</span> • Powered by Google Apps Script
   </footer>
 
   <script>
@@ -840,18 +834,18 @@
     let chartsRendered = false;
     let currentSelectedSchool = '';
 
-    // District Pagination Configuration
+    // District Pagination
     let currentPage = 1;
     const itemsPerPage = 12;
     let currentFilteredDistrictBooks = [];
 
-    // School Pagination Configuration
+    // School Pagination
     let schoolCurrentPage = 1;
     const schoolItemsPerPage = 12;
     let currentFilteredSchoolBooks = [];
 
     const loadingPhrases = [
-      { emoji: "📚", text: "Connecting to Aringay District repository..." },
+      { emoji: "📚", text: "Connecting to Learning Resources repository..." },
       { emoji: "🏫", text: "Loading School Data and distribution..." },
       { emoji: "🎒", text: "Sorting titles by grade level & title..." },
       { emoji: "✨", text: "Preparing Learning Resources portal..." }
@@ -920,10 +914,10 @@
           })
           .getDashboardData();
       } else {
-        // Vercel / External Domain Mode via fetch API
+        // Vercel / External Domain Mode
         if (!APPS_SCRIPT_API_URL || APPS_SCRIPT_API_URL.includes("PASTE_YOUR")) {
           stopLoadingAnimation();
-          showError("Apps Script URL not set. Please paste your Web App URL into APPS_SCRIPT_API_URL at line 468 of Index.html.");
+          showError("Apps Script URL not set. Please paste your Web App URL into APPS_SCRIPT_API_URL in Index.html.");
           return;
         }
 
@@ -958,30 +952,77 @@
       document.getElementById('error-message').innerText = msg;
     }
 
+    // SILENT IMAGE PRELOADER (Instant rendering for books and logos)
+    function preloadImagesSilently(data) {
+      setTimeout(() => {
+        const urls = [];
+        if (data.schoolList) {
+          data.schoolList.forEach(s => { if (s.logoUrl) urls.push(s.logoUrl); });
+        }
+        if (data.books) {
+          data.books.forEach(b => { if (b.imageUrl) urls.push(b.imageUrl); });
+        }
+        urls.forEach(url => {
+          const img = new Image();
+          img.src = url;
+        });
+      }, 100);
+    }
+
     function onDataLoaded(data) {
-      globalData = data;
-      document.getElementById('dashboard').classList.remove('hidden');
+      try {
+        globalData = data;
+        document.getElementById('dashboard').classList.remove('hidden');
 
-      // KPIs
-      document.getElementById('kpi-titles').innerText = Number(data.kpis.totalTitles || 0).toLocaleString();
-      document.getElementById('kpi-books').innerText = Number(data.kpis.totalBooks || 0).toLocaleString();
-      document.getElementById('kpi-schools').innerText = data.kpis.schoolCount || 0;
+        // Dynamically Apply District Config (Not hardcoded)
+        if (data.config) {
+          const cfg = data.config;
+          if (cfg.districtName) {
+            const hDist = document.getElementById('headerDistrictName');
+            if (hDist) hDist.innerText = cfg.districtName;
+            document.title = cfg.districtName + ' LRs';
+            const footerLabel = document.getElementById('footerDistrictLabel');
+            if (footerLabel) footerLabel.innerText = 'DepEd ' + cfg.districtName + ' Learning Resources System';
+          }
+          if (cfg.region) {
+            const hReg = document.getElementById('headerRegion');
+            if (hReg) hReg.innerText = 'DepEd ' + cfg.region;
+          }
+          if (cfg.division) {
+            const hDiv = document.getElementById('headerDivision');
+            if (hDiv) hDiv.innerText = cfg.division.replace(/^Schools Division of\s*/i, '');
+          }
+          if (cfg.logoUrl) {
+            const hLogo = document.getElementById('headerDistrictLogo');
+            if (hLogo) hLogo.src = cfg.logoUrl;
+            const fav = document.getElementById('browserFavicon');
+            if (fav) fav.href = cfg.logoUrl;
+          }
+        }
 
-      // Populate Inputs
-      populateSubjectFilter(data.subjects || {});
-      populateSubjectDatalist(data.existingSubjects || []);
-      buildAdminSchoolInputs(data.schoolList || []);
-      
-      // Populate school selector
-      populateSchoolSelector(data.schoolList || []);
+        // KPIs
+        document.getElementById('kpi-titles').innerText = Number(data.kpis.totalTitles || 0).toLocaleString();
+        document.getElementById('kpi-books').innerText = Number(data.kpis.totalBooks || 0).toLocaleString();
+        document.getElementById('kpi-schools').innerText = data.kpis.schoolCount || 0;
 
-      // Ensure District Tab is the active visible tab on first load
-      switchMainTab('district');
+        // Populate Filters & Inputs
+        populateSubjectFilter(data.subjects || {});
+        populateSubjectDatalist(data.existingSubjects || []);
+        buildAdminSchoolInputs(data.schoolList || []);
+        populateSchoolSelector(data.schoolList || []);
 
-      // Render District Books with pagination
-      currentPage = 1;
-      applyDistrictFilters();
-      chartsRendered = false;
+        // Ensure District Tab is visible
+        switchMainTab('district');
+
+        currentPage = 1;
+        applyDistrictFilters();
+        chartsRendered = false;
+
+        // Background Silent Image Preloading
+        preloadImagesSilently(data);
+      } catch (err) {
+        showError("Interface display error: " + err.message);
+      }
     }
 
     // Switch Tabs
@@ -1034,7 +1075,7 @@
     }
 
     // ==========================================
-    // SCHOOL DATA & MULTI-FILTERS & PAGINATION
+    // SCHOOL DATA & FILTERS & PAGINATION
     // ==========================================
     function setSchoolViewMode(mode) {
       schoolViewMode = mode;
@@ -1182,7 +1223,7 @@
         const drTag = b.deliveryNo ? `<span class="truncate"><i class="fa-solid fa-truck text-indigo-500 mr-0.5"></i>DR: <b>${escapeHtml(b.deliveryNo)}</b></span>` : '';
         const iarTag = b.iarNo ? `<span class="truncate"><i class="fa-solid fa-file-invoice text-emerald-500 mr-0.5"></i>IAR: <b>${escapeHtml(b.iarNo)}</b></span>` : '';
 
-        // 1. Grid Card
+        // Grid Card
         const card = document.createElement('div');
         card.className = "bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition flex flex-col group";
         card.innerHTML = `
@@ -1200,7 +1241,6 @@
               </div>
               <h4 class="font-bold text-xs sm:text-sm text-slate-900 line-clamp-2 leading-snug group-hover:text-indigo-600 transition">${escapeHtml(b.title)}</h4>
               
-              <!-- DR and IAR badges -->
               ${(drTag || iarTag) ? `
                 <div class="mt-1.5 flex flex-wrap items-center gap-1.5 text-[9px] text-slate-500 bg-slate-50 px-1.5 py-1 rounded border border-slate-100">
                   ${drTag}
@@ -1219,7 +1259,7 @@
         `;
         container.appendChild(card);
 
-        // 2. List Row
+        // List Row
         const tr = document.createElement('tr');
         tr.className = "hover:bg-indigo-50/40 transition";
         tr.innerHTML = `
@@ -1279,17 +1319,13 @@
       prevBtn.disabled = (schoolCurrentPage === 1);
       nextBtn.disabled = (schoolCurrentPage === totalPages);
 
-      if (schoolCurrentPage === 1) {
-        prevBtn.className = "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200";
-      } else {
-        prevBtn.className = "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs cursor-pointer";
-      }
+      prevBtn.className = (schoolCurrentPage === 1)
+        ? "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
+        : "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs cursor-pointer";
 
-      if (schoolCurrentPage === totalPages) {
-        nextBtn.className = "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200";
-      } else {
-        nextBtn.className = "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs cursor-pointer";
-      }
+      nextBtn.className = (schoolCurrentPage === totalPages)
+        ? "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
+        : "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs cursor-pointer";
 
       renderPageNumbers('school-page-numbers', schoolCurrentPage, totalPages, 'goToSchoolPage');
     }
@@ -1400,7 +1436,7 @@
         const drTag = b.deliveryNo ? `<span class="truncate"><i class="fa-solid fa-truck text-indigo-500 mr-0.5"></i>DR: <b>${escapeHtml(b.deliveryNo)}</b></span>` : '';
         const iarTag = b.iarNo ? `<span class="truncate"><i class="fa-solid fa-file-invoice text-emerald-500 mr-0.5"></i>IAR: <b>${escapeHtml(b.iarNo)}</b></span>` : '';
 
-        // 1. Grid Card
+        // Grid Card
         const card = document.createElement('div');
         card.className = "bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition flex flex-col group";
         card.innerHTML = `
@@ -1418,7 +1454,6 @@
               </div>
               <h4 class="font-bold text-xs sm:text-sm text-slate-900 line-clamp-2 leading-snug group-hover:text-indigo-600 transition">${escapeHtml(b.title)}</h4>
               
-              <!-- DR & IAR Badges -->
               ${(drTag || iarTag) ? `
                 <div class="mt-1.5 flex flex-wrap items-center gap-1.5 text-[9px] text-slate-500 bg-slate-50 px-1.5 py-1 rounded border border-slate-100">
                   ${drTag}
@@ -1437,7 +1472,7 @@
         `;
         gridContainer.appendChild(card);
 
-        // 2. List Row
+        // List Row
         const tr = document.createElement('tr');
         tr.className = "hover:bg-indigo-50/40 transition";
         tr.innerHTML = `
@@ -1493,17 +1528,13 @@
       prevBtn.disabled = (currentPage === 1);
       nextBtn.disabled = (currentPage === totalPages);
 
-      if (currentPage === 1) {
-        prevBtn.className = "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200";
-      } else {
-        prevBtn.className = "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs cursor-pointer";
-      }
+      prevBtn.className = (currentPage === 1)
+        ? "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
+        : "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs cursor-pointer";
 
-      if (currentPage === totalPages) {
-        nextBtn.className = "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200";
-      } else {
-        nextBtn.className = "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs cursor-pointer";
-      }
+      nextBtn.className = (currentPage === totalPages)
+        ? "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
+        : "px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 border border-slate-300 shadow-xs cursor-pointer";
 
       renderPageNumbers('district-page-numbers', currentPage, totalPages, 'goToPage');
     }
@@ -1820,7 +1851,7 @@
     }
 
     // ==========================================
-    // PRINT REPORTS (DISTRICT & SCHOOL)
+    // PRINT REPORTS (DYNAMIC DISTRICT & SCHOOL)
     // ==========================================
     function openDistrictPrintModal() {
       document.getElementById('printDistrictCount').innerText = currentFilteredDistrictBooks.length;
@@ -1835,6 +1866,11 @@
       const prepBy = document.getElementById('districtPreparedBy').value.trim() || 'District Property Custodian';
       const certBy = document.getElementById('districtCertifiedBy').value.trim() || 'Public Schools District Supervisor';
       closeDistrictPrintModal();
+
+      const districtName = (globalData && globalData.config && globalData.config.districtName) ? globalData.config.districtName : 'Aringay District';
+      const region = (globalData && globalData.config && globalData.config.region) ? globalData.config.region : 'Region I';
+      const division = (globalData && globalData.config && globalData.config.division) ? globalData.config.division : 'Schools Division of La Union';
+      const logoUrl = (globalData && globalData.config && globalData.config.logoUrl) ? globalData.config.logoUrl : '';
 
       const booksToPrint = currentFilteredDistrictBooks;
       const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -1859,17 +1895,19 @@
 
       const printHtml = `
         <div style="font-family: Arial, sans-serif; font-size: 11px; color: #000; line-height: 1.4;">
-          <!-- DepEd Header -->
-          <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 14px;">
-            <div style="font-size: 11px; text-transform: uppercase;">Republic of the Philippines</div>
-            <div style="font-size: 13px; font-weight: bold; text-transform: uppercase;">Department of Education</div>
-            <div style="font-size: 11px;">Region I • Schools Division of La Union</div>
-            <div style="font-size: 13px; font-weight: bold; letter-spacing: 1px; margin-top: 2px;">ARINGAY DISTRICT</div>
-            <div style="font-size: 14px; font-weight: 900; margin-top: 8px; text-decoration: underline;">DISTRICT LEARNING RESOURCES (LRs) INVENTORY REPORT</div>
-            <div style="font-size: 10px; color: #475569; margin-top: 3px;">Date Generated: ${today} • Total Titles: ${booksToPrint.length} • Total Volume: ${totalCopies.toLocaleString()} copies</div>
+          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 14px;">
+            ${logoUrl ? `<img src="${logoUrl}" style="width: 55px; height: 55px; object-fit: contain;">` : `<div style="width: 55px;"></div>`}
+            <div style="text-align: center; flex: 1;">
+              <div style="font-size: 11px; text-transform: uppercase;">Republic of the Philippines</div>
+              <div style="font-size: 13px; font-weight: bold; text-transform: uppercase;">Department of Education</div>
+              <div style="font-size: 11px;">DepEd ${escapeHtml(region)} • ${escapeHtml(division)}</div>
+              <div style="font-size: 13px; font-weight: bold; letter-spacing: 1px; margin-top: 2px; text-transform: uppercase;">${escapeHtml(districtName)}</div>
+              <div style="font-size: 14px; font-weight: 900; margin-top: 6px; text-decoration: underline;">DISTRICT LEARNING RESOURCES (LRs) INVENTORY REPORT</div>
+              <div style="font-size: 10px; color: #475569; margin-top: 2px;">Date Generated: ${today} • Total Titles: ${booksToPrint.length} • Total Volume: ${totalCopies.toLocaleString()} copies</div>
+            </div>
+            <div style="width: 55px;"></div>
           </div>
 
-          <!-- Table -->
           <table style="width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 25px;">
             <thead>
               <tr style="background-color: #f1f5f9; border-top: 1px solid #000; border-bottom: 1.5px solid #000; text-transform: uppercase;">
@@ -1892,7 +1930,6 @@
             </tbody>
           </table>
 
-          <!-- Signatures Block -->
           <div style="display: flex; justify-content: space-between; margin-top: 40px; page-break-inside: avoid;">
             <div style="width: 42%; text-align: left;">
               <div style="font-size: 10px; margin-bottom: 35px;">Prepared by:</div>
@@ -1930,8 +1967,13 @@
       const certBy = document.getElementById('schoolCertifiedBy').value.trim() || 'School Head';
       closeSchoolPrintModal();
 
+      const districtName = (globalData && globalData.config && globalData.config.districtName) ? globalData.config.districtName : 'Aringay District';
+      const region = (globalData && globalData.config && globalData.config.region) ? globalData.config.region : 'Region I';
+      const division = (globalData && globalData.config && globalData.config.division) ? globalData.config.division : 'Schools Division of La Union';
+      const districtLogoUrl = (globalData && globalData.config && globalData.config.logoUrl) ? globalData.config.logoUrl : '';
+
       const schoolObj = (globalData.schoolList || []).find(s => s.name.trim().toLowerCase() === currentSelectedSchool.trim().toLowerCase());
-      const logoUrl = (schoolObj && schoolObj.logoUrl) ? schoolObj.logoUrl : '';
+      const schoolLogoUrl = (schoolObj && schoolObj.logoUrl) ? schoolObj.logoUrl : '';
 
       const booksToPrint = currentFilteredSchoolBooks;
       const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -1956,20 +1998,18 @@
 
       const printHtml = `
         <div style="font-family: Arial, sans-serif; font-size: 11px; color: #000; line-height: 1.4;">
-          <!-- School DepEd Header -->
           <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 14px;">
-            <img src="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz" style="width: 50px; height: 50px; object-fit: contain;">
+            ${districtLogoUrl ? `<img src="${districtLogoUrl}" style="width: 50px; height: 50px; object-fit: contain;">` : `<div style="width: 50px;"></div>`}
             <div style="text-align: center; flex: 1;">
               <div style="font-size: 11px; text-transform: uppercase;">Republic of the Philippines • Department of Education</div>
-              <div style="font-size: 11px;">Region I • Schools Division of La Union • Aringay District</div>
+              <div style="font-size: 11px;">DepEd ${escapeHtml(region)} • ${escapeHtml(division)} • ${escapeHtml(districtName)}</div>
               <div style="font-size: 14px; font-weight: 900; letter-spacing: 0.5px; margin-top: 2px; text-transform: uppercase;">${escapeHtml(currentSelectedSchool)}</div>
               <div style="font-size: 13px; font-weight: bold; margin-top: 4px; text-decoration: underline;">SCHOOL LEARNING RESOURCES ALLOCATION INVENTORY</div>
-              <div style="font-size: 10px; color: #475569; margin-top: 2px;">Date: ${today} • Allocated Titles: ${booksToPrint.length} • Total Copies Received: ${totalSchoolCopies.toLocaleString()}</div>
+              <div style="font-size: 10px; color: #475569; margin-top: 2px;">Date: ${today} • Allocated Titles: ${booksToPrint.length} • Total Copies: ${totalSchoolCopies.toLocaleString()}</div>
             </div>
-            ${logoUrl ? `<img src="${logoUrl}" style="width: 50px; height: 50px; object-fit: contain;">` : `<div style="width: 50px;"></div>`}
+            ${schoolLogoUrl ? `<img src="${schoolLogoUrl}" style="width: 50px; height: 50px; object-fit: contain;">` : `<div style="width: 50px;"></div>`}
           </div>
 
-          <!-- Table -->
           <table style="width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 25px;">
             <thead>
               <tr style="background-color: #f1f5f9; border-top: 1px solid #000; border-bottom: 1.5px solid #000; text-transform: uppercase;">
@@ -1991,7 +2031,6 @@
             </tbody>
           </table>
 
-          <!-- Signatures Block -->
           <div style="display: flex; justify-content: space-between; margin-top: 40px; page-break-inside: avoid;">
             <div style="width: 42%; text-align: left;">
               <div style="font-size: 10px; margin-bottom: 35px;">Prepared by:</div>
@@ -2317,7 +2356,7 @@
           indexAxis: 'y',
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
+          plugins: { 
             legend: { display: false },
             tooltip: {
               backgroundColor: '#0f172a',
