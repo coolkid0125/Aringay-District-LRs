@@ -3,12 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title id="pageTitle"><?= (typeof config !== 'undefined' && config.districtName) ? config.districtName + ' LRs' : 'DepEd District LRs' ?></title>
+  
+  <!-- Primary Meta Tags -->
+  <title id="pageTitle">DepEd Aringay District LRs - Learning Resources Repository</title>
+  <meta name="title" content="DepEd Aringay District LRs - Learning Resources Repository">
+  <meta name="description" content="Official Learning Resources (LRs) Repository and School Allocation Inventory System for DepEd Aringay District.">
+
+  <!-- Open Graph / Facebook / Messenger Link Preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aringaydlrs.vercel.app/">
+  <meta property="og:title" content="DepEd Aringay District LRs - Learning Resources Repository">
+  <meta property="og:description" content="Official Learning Resources (LRs) Repository and School Allocation Inventory System for DepEd Aringay District.">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
+
+  <!-- Twitter Meta Tags -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://aringaydlrs.vercel.app/">
+  <meta property="twitter:title" content="DepEd Aringay District LRs - Learning Resources Repository">
+  <meta property="twitter:description" content="Official Learning Resources (LRs) Repository and School Allocation Inventory System for DepEd Aringay District.">
+  <meta property="twitter:image" content="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
   
   <!-- Dynamic Browser Tab Favicon -->
-  <link id="browserFavicon" rel="icon" type="image/png" href="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>">
-  <link rel="shortcut icon" type="image/png" href="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>">
-  <link rel="apple-touch-icon" href="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>">
+  <link id="browserFavicon" rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
+  <link rel="shortcut icon" type="image/png" href="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
+  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
   
   <!-- Tailwind CSS, Chart.js & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,6 +50,50 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
 
+  <!-- FULL SCREEN BRANDED LOADING SCREEN -->
+  <div id="fullScreenLoader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 text-white transition-opacity duration-300 p-4">
+    <div class="relative flex items-center justify-center mb-6">
+      <div class="absolute w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-indigo-500/20 animate-ping"></div>
+      <div class="relative w-24 h-24 sm:w-28 sm:h-28 bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/20 shadow-2xl flex items-center justify-center">
+        <img id="loaderDistrictLogo" 
+             src="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz" 
+             alt="District Logo" 
+             class="w-full h-full object-contain filter drop-shadow-md"
+             onerror="this.src='https://placehold.co/100x100?text=Logo';">
+      </div>
+    </div>
+
+    <div class="text-center space-y-2.5 max-w-sm px-4">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-indigo-200 text-[10px] font-semibold tracking-wider uppercase border border-white/10">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span id="loaderRegionText">DepEd Region I • La Union</span>
+      </div>
+      
+      <h2 id="loaderDistrictTitle" class="text-xl sm:text-2xl font-black tracking-tight text-white leading-tight">
+        Aringay District
+      </h2>
+      <p class="text-xs text-indigo-200 font-medium">Learning Resources (LRs) Repository</p>
+
+      <div class="pt-4 flex flex-col items-center">
+        <div class="flex items-center justify-center gap-2 mb-2 text-indigo-300">
+          <i class="fa-solid fa-circle-notch fa-spin text-sm text-amber-400"></i>
+          <span id="loading-phrase" class="text-xs sm:text-sm font-semibold tracking-wide text-white">Connecting to repository...</span>
+        </div>
+        <p class="text-[11px] text-slate-400 font-mono">
+          Loading system data... (<span id="elapsedSecs">0</span>s)
+        </p>
+      </div>
+
+      <div id="timeout-hint" class="hidden mt-4 p-3 bg-amber-500/20 border border-amber-400/30 rounded-xl text-xs text-amber-200">
+        <p class="font-semibold mb-1"><i class="fa-solid fa-triangle-exclamation"></i> Taking longer than usual?</p>
+        <p class="text-[11px] text-amber-300 mb-2" id="timeout-detail">Connecting to sheet database...</p>
+        <button onclick="fetchData()" class="px-3.5 py-1.5 bg-amber-500 text-slate-900 rounded-lg font-bold hover:bg-amber-400 transition text-xs shadow">
+          Force Reconnect
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 via-indigo-800 to-indigo-900 text-white shadow-lg sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-3">
@@ -39,7 +101,7 @@
       <!-- Dynamic Brand & District Logo -->
       <div class="flex items-center space-x-3">
         <img id="headerDistrictLogo" 
-             src="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>" 
+             src="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz" 
              alt="District Logo" 
              class="w-10 h-10 sm:w-12 sm:h-12 object-contain bg-white/10 rounded-full p-1 border border-white/20 shadow-sm cursor-pointer shrink-0"
              onclick="openLightbox(this.src)"
@@ -47,14 +109,14 @@
         <div>
           <div class="flex items-center gap-1.5">
             <span id="headerRegion" class="text-[10px] uppercase tracking-widest text-indigo-200 font-semibold">
-              DepEd <?= (typeof config !== 'undefined' && config.region) ? config.region : 'Region I' ?>
+              DepEd Region I
             </span>
             <span id="headerDivision" class="text-[9px] bg-indigo-500/40 px-1.5 py-0.2 rounded text-indigo-100">
-              <?= (typeof config !== 'undefined' && config.division) ? config.division.replace(/^Schools Division of\s*/i, '') : 'La Union' ?>
+              La Union
             </span>
           </div>
           <h1 id="headerDistrictName" class="text-lg sm:text-2xl font-black tracking-tight leading-tight">
-            <?= (typeof config !== 'undefined' && config.districtName) ? config.districtName : 'Aringay District' ?>
+            Aringay District
           </h1>
           <p class="text-[10px] sm:text-xs text-indigo-200">Learning Resources (LRs) Repository</p>
         </div>
@@ -100,22 +162,6 @@
       </div>
       <button onclick="fetchData()" class="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-lg shrink-0">
         Retry Now
-      </button>
-    </div>
-  </div>
-
-  <!-- Loading State with Real-Time Seconds Counter -->
-  <div id="loader" class="flex flex-col items-center justify-center my-auto py-20 px-4 text-center">
-    <div class="text-5xl animate-bounce mb-3" id="loading-emoji">📚</div>
-    <div class="animate-spin rounded-full h-10 w-10 border-4 border-indigo-600 border-t-transparent mb-3"></div>
-    <p id="loading-text" class="text-sm font-semibold text-slate-700">Connecting to Learning Resources repository...</p>
-    <p id="loading-timer" class="text-xs text-slate-400 mt-1">Connecting... (<span id="elapsedSecs">0</span>s)</p>
-
-    <div id="timeout-hint" class="hidden mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 max-w-sm">
-      <p class="font-semibold mb-1"><i class="fa-solid fa-triangle-exclamation"></i> Taking longer than usual?</p>
-      <p class="text-[11px] text-amber-700 mb-2">Click below to force reconnect.</p>
-      <button onclick="fetchData()" class="px-3 py-1.5 bg-amber-600 text-white rounded-lg font-bold hover:bg-amber-700">
-        Force Reconnect
       </button>
     </div>
   </div>
@@ -169,7 +215,7 @@
               </button>
             </div>
 
-            <!-- High-Visibility Emerald Print District Report Button -->
+            <!-- Print District Report Button -->
             <button onclick="openDistrictPrintModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md hover:shadow-lg ring-2 ring-emerald-400/40 transition active:scale-95">
               <i class="fa-solid fa-print text-amber-300 text-sm"></i> <span>Print Report</span>
             </button>
@@ -246,7 +292,7 @@
         </div>
       </div>
 
-      <!-- Active School Card Banner (Preloaded Logo & KPIs) -->
+      <!-- Active School Card Banner -->
       <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white rounded-2xl p-4 sm:p-6 shadow-md border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
         
         <div class="flex items-center gap-4 text-center sm:text-left">
@@ -315,7 +361,7 @@
               </button>
             </div>
 
-            <!-- High-Visibility Emerald Print School Inventory Button -->
+            <!-- Print School Inventory Button -->
             <button onclick="openSchoolPrintModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md hover:shadow-lg ring-2 ring-emerald-400/40 transition active:scale-95">
               <i class="fa-solid fa-print text-amber-300 text-sm"></i> <span>Print School Inventory</span>
             </button>
@@ -814,13 +860,12 @@
   </button>
 
   <footer class="bg-white border-t border-slate-200 py-3.5 text-center text-xs text-slate-500 mt-auto">
-    <span id="footerDistrictLabel">DepEd Learning Resources Management System</span> • Powered by Google Apps Script
+    <span id="footerDistrictLabel">DepEd Aringay District Learning Resources Management System</span> • Powered by Google Apps Script
   </footer>
 
   <script>
     // =========================================================================
-    // ⚙️ CONFIGURATION FOR VERCEL HOSTING:
-    // When deploying to Vercel, paste your deployed Apps Script Web App URL below:
+    // ⚙️ APPS SCRIPT WEB APP API URL:
     // =========================================================================
     const APPS_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbwFmFTs1C53mTM4nk56nBOM1bnCjszvn96padGs1Frrh7_EcR4de321hDbOaaNIBh8SzA/exec";
 
@@ -845,14 +890,14 @@
     let currentFilteredSchoolBooks = [];
 
     const loadingPhrases = [
-      { emoji: "📚", text: "Connecting to Learning Resources repository..." },
-      { emoji: "🏫", text: "Loading School Data and distribution..." },
-      { emoji: "🎒", text: "Sorting titles by grade level & title..." },
-      { emoji: "✨", text: "Preparing Learning Resources portal..." }
+      "Connecting to Learning Resources repository...",
+      "Loading School Data and book distributions...",
+      "Sorting titles by grade level & subject...",
+      "Preparing Learning Resources portal..."
     ];
     let phraseTimer = null;
     let elapsedTimer = null;
-    let startTime = 0;
+    let startTime = Date.now();
 
     function escapeHtml(str) {
       if (str === null || str === undefined) return '';
@@ -865,72 +910,101 @@
     }
 
     function startLoadingAnimation() {
-      document.getElementById('error-banner').classList.add('hidden');
-      document.getElementById('loader').classList.remove('hidden');
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('timeout-hint').classList.add('hidden');
+      const fsLoader = document.getElementById('fullScreenLoader');
+      if (fsLoader) {
+        fsLoader.style.display = 'flex';
+        fsLoader.classList.remove('opacity-0', 'pointer-events-none');
+      }
       
       startTime = Date.now();
-      document.getElementById('elapsedSecs').innerText = '0';
-
       let index = 0;
+      
       if (phraseTimer) clearInterval(phraseTimer);
       phraseTimer = setInterval(() => {
         index = (index + 1) % loadingPhrases.length;
-        document.getElementById('loading-emoji').innerText = loadingPhrases[index].emoji;
-        document.getElementById('loading-text').innerText = loadingPhrases[index].text;
+        const phraseEl = document.getElementById('loading-phrase');
+        if (phraseEl) phraseEl.innerText = loadingPhrases[index];
       }, 1500);
 
       if (elapsedTimer) clearInterval(elapsedTimer);
       elapsedTimer = setInterval(() => {
         const secs = Math.floor((Date.now() - startTime) / 1000);
-        document.getElementById('elapsedSecs').innerText = secs;
-        if (secs >= 6) {
-          document.getElementById('timeout-hint').classList.remove('hidden');
+        const elSecs = document.getElementById('elapsedSecs');
+        if (elSecs) elSecs.innerText = secs;
+        
+        const timeoutHint = document.getElementById('timeout-hint');
+        if (secs >= 5 && timeoutHint) {
+          timeoutHint.classList.remove('hidden');
         }
       }, 1000);
     }
 
-    function stopLoadingAnimation() {
+    function hideLoadingScreen() {
       if (phraseTimer) clearInterval(phraseTimer);
       if (elapsedTimer) clearInterval(elapsedTimer);
-      document.getElementById('loader').classList.add('hidden');
-      document.getElementById('refresh-icon').classList.remove('fa-spin');
+      
+      const fsLoader = document.getElementById('fullScreenLoader');
+      if (fsLoader) {
+        fsLoader.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+          fsLoader.style.display = 'none';
+        }, 350);
+      }
+      const refIcon = document.getElementById('refresh-icon');
+      if (refIcon) refIcon.classList.remove('fa-spin');
+    }
+
+    function showError(msg) {
+      hideLoadingScreen();
+      const errBanner = document.getElementById('error-banner');
+      const errMsg = document.getElementById('error-message');
+      if (errBanner && errMsg) {
+        errBanner.classList.remove('hidden');
+        errMsg.innerText = msg;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      const tDetail = document.getElementById('timeout-detail');
+      if (tDetail) tDetail.innerText = msg;
+      console.error("Dashboard error:", msg);
     }
 
     function fetchData() {
       startLoadingAnimation();
-      document.getElementById('refresh-icon').classList.add('fa-spin');
+      const refIcon = document.getElementById('refresh-icon');
+      if (refIcon) refIcon.classList.add('fa-spin');
 
       if (isAppsScriptEnv) {
         google.script.run
-          .withSuccessHandler(raw => {
-            stopLoadingAnimation();
+          .withSuccessHandler(function(raw) {
             handleDashboardResponse(raw);
           })
-          .withFailureHandler(err => {
-            stopLoadingAnimation();
-            showError(err.message || "Failed to communicate with Google Apps Script.");
+          .withFailureHandler(function(err) {
+            showError((err && err.message) ? err.message : "Failed to communicate with Google Apps Script.");
           })
           .getDashboardData();
       } else {
-        // Vercel / External Domain Mode
-        if (!APPS_SCRIPT_API_URL || APPS_SCRIPT_API_URL.includes("PASTE_YOUR")) {
-          stopLoadingAnimation();
-          showError("Apps Script URL not set. Please paste your Web App URL into APPS_SCRIPT_API_URL in Index.html.");
-          return;
-        }
+        // Vercel execution using JSONP (Immune to all CORS and browser redirect blocks)
+        const callbackName = 'deped_cb_' + Date.now();
+        const script = document.createElement('script');
+        
+        window[callbackName] = function(response) {
+          try {
+            handleDashboardResponse(response);
+          } finally {
+            delete window[callbackName];
+            if (script.parentNode) script.parentNode.removeChild(script);
+          }
+        };
 
-        fetch(`${APPS_SCRIPT_API_URL}?api=1`)
-          .then(res => res.json())
-          .then(raw => {
-            stopLoadingAnimation();
-            handleDashboardResponse(raw);
-          })
-          .catch(err => {
-            stopLoadingAnimation();
-            showError("Connection error: " + err.message + ". Make sure your Web App deployment is set to 'Anyone'.");
-          });
+        script.onerror = function() {
+          delete window[callbackName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          showError("Unable to connect to Google Sheet API. Please verify internet connection.");
+        };
+
+        const separator = APPS_SCRIPT_API_URL.includes('?') ? '&' : '?';
+        script.src = `${APPS_SCRIPT_API_URL}${separator}callback=${callbackName}&t=${Date.now()}`;
+        document.body.appendChild(script);
       }
     }
 
@@ -939,20 +1013,15 @@
         const res = (typeof raw === 'string') ? JSON.parse(raw) : raw;
         if (res && res.success) {
           onDataLoaded(res.data);
+          hideLoadingScreen();
         } else {
-          showError(res ? res.error : "Unknown error returned by Apps Script.");
+          showError(res ? (res.error || res.message) : "Unknown error returned by Apps Script.");
         }
       } catch (e) {
         showError("Failed to parse server data: " + e.message);
       }
     }
 
-    function showError(msg) {
-      document.getElementById('error-banner').classList.remove('hidden');
-      document.getElementById('error-message').innerText = msg;
-    }
-
-    // SILENT IMAGE PRELOADER (Instant rendering for books and logos)
     function preloadImagesSilently(data) {
       setTimeout(() => {
         const urls = [];
@@ -971,15 +1040,19 @@
 
     function onDataLoaded(data) {
       try {
+        if (!data) throw new Error("Empty data received.");
         globalData = data;
-        document.getElementById('dashboard').classList.remove('hidden');
+        const dash = document.getElementById('dashboard');
+        if (dash) dash.classList.remove('hidden');
 
-        // Dynamically Apply District Config (Not hardcoded)
+        // Dynamically Apply District Config
         if (data.config) {
           const cfg = data.config;
           if (cfg.districtName) {
             const hDist = document.getElementById('headerDistrictName');
             if (hDist) hDist.innerText = cfg.districtName;
+            const lDist = document.getElementById('loaderDistrictTitle');
+            if (lDist) lDist.innerText = cfg.districtName;
             document.title = cfg.districtName + ' LRs';
             const footerLabel = document.getElementById('footerDistrictLabel');
             if (footerLabel) footerLabel.innerText = 'DepEd ' + cfg.districtName + ' Learning Resources System';
@@ -995,15 +1068,21 @@
           if (cfg.logoUrl) {
             const hLogo = document.getElementById('headerDistrictLogo');
             if (hLogo) hLogo.src = cfg.logoUrl;
+            const lLogo = document.getElementById('loaderDistrictLogo');
+            if (lLogo) lLogo.src = cfg.logoUrl;
             const fav = document.getElementById('browserFavicon');
             if (fav) fav.href = cfg.logoUrl;
           }
         }
 
         // KPIs
-        document.getElementById('kpi-titles').innerText = Number(data.kpis.totalTitles || 0).toLocaleString();
-        document.getElementById('kpi-books').innerText = Number(data.kpis.totalBooks || 0).toLocaleString();
-        document.getElementById('kpi-schools').innerText = data.kpis.schoolCount || 0;
+        const kpis = data.kpis || {};
+        const kTitles = document.getElementById('kpi-titles');
+        if (kTitles) kTitles.innerText = Number(kpis.totalTitles || 0).toLocaleString();
+        const kBooks = document.getElementById('kpi-books');
+        if (kBooks) kBooks.innerText = Number(kpis.totalBooks || 0).toLocaleString();
+        const kSchools = document.getElementById('kpi-schools');
+        if (kSchools) kSchools.innerText = kpis.schoolCount || 0;
 
         // Populate Filters & Inputs
         populateSubjectFilter(data.subjects || {});
@@ -1962,6 +2041,7 @@
       document.getElementById('schoolPrintModal').classList.add('hidden');
     }
 
+    // 🌟 SCHOOL PRINT WITH DATE RECEIVED (Date Rec'd)
     function executeSchoolPrint() {
       const prepBy = document.getElementById('schoolPreparedBy').value.trim() || 'School Property Custodian';
       const certBy = document.getElementById('schoolCertifiedBy').value.trim() || 'School Head';
@@ -1991,6 +2071,7 @@
             <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.grade)}</td>
             <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.deliveryNo) || '-'}</td>
             <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.iarNo) || '-'}</td>
+            <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.dateReceived) || '-'}</td>
             <td style="padding: 6px 8px; text-align: right; font-weight: bold;">${qty.toLocaleString()}</td>
           </tr>
         `;
@@ -2016,16 +2097,17 @@
                 <th style="padding: 6px 8px; text-align: center; width: 30px;">#</th>
                 <th style="padding: 6px 8px; text-align: left;">Resource / Book Title</th>
                 <th style="padding: 6px 8px; text-align: left; width: 100px;">Subject</th>
-                <th style="padding: 6px 8px; text-align: center; width: 70px;">Grade</th>
-                <th style="padding: 6px 8px; text-align: center; width: 90px;">DR #</th>
-                <th style="padding: 6px 8px; text-align: center; width: 85px;">IAR #</th>
+                <th style="padding: 6px 8px; text-align: center; width: 65px;">Grade</th>
+                <th style="padding: 6px 8px; text-align: center; width: 85px;">DR #</th>
+                <th style="padding: 6px 8px; text-align: center; width: 80px;">IAR #</th>
+                <th style="padding: 6px 8px; text-align: center; width: 75px;">Date Rec'd</th>
                 <th style="padding: 6px 8px; text-align: right; width: 70px;">Allocated</th>
               </tr>
             </thead>
             <tbody>
               ${rowsHtml}
               <tr style="border-top: 2px solid #000; font-weight: bold; background-color: #f8fafc;">
-                <td colspan="6" style="padding: 8px; text-align: right; text-transform: uppercase;">Total Allocated Copies:</td>
+                <td colspan="7" style="padding: 8px; text-align: right; text-transform: uppercase;">Total Allocated Copies:</td>
                 <td style="padding: 8px; text-align: right; font-size: 11px;">${totalSchoolCopies.toLocaleString()}</td>
               </tr>
             </tbody>
@@ -2415,7 +2497,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Instant Fetch
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', fetchData);
     } else {
