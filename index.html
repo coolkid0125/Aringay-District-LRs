@@ -3,12 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title id="pageTitle"><?= (typeof config !== 'undefined' && config.districtName) ? config.districtName + ' LRs' : 'DepEd District LRs' ?></title>
+  
+  <!-- Primary Meta Tags -->
+  <title id="pageTitle">DepEd Aringay District LRs - Learning Resources Repository</title>
+  <meta name="title" content="DepEd Aringay District LRs - Learning Resources Repository">
+  <meta name="description" content="Official Learning Resources (LRs) Repository and School Allocation Inventory System for DepEd Aringay District.">
+
+  <!-- Open Graph / Facebook / Messenger Link Preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aringaydlrs.vercel.app/">
+  <meta property="og:title" content="DepEd Aringay District LRs - Learning Resources Repository">
+  <meta property="og:description" content="Official Learning Resources (LRs) Repository and School Allocation Inventory System for DepEd Aringay District.">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
+
+  <!-- Twitter Meta Tags -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://aringaydlrs.vercel.app/">
+  <meta property="twitter:title" content="DepEd Aringay District LRs - Learning Resources Repository">
+  <meta property="twitter:description" content="Official Learning Resources (LRs) Repository and School Allocation Inventory System for DepEd Aringay District.">
+  <meta property="twitter:image" content="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
   
   <!-- Dynamic Browser Tab Favicon -->
-  <link id="browserFavicon" rel="icon" type="image/png" href="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>">
-  <link rel="shortcut icon" type="image/png" href="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>">
-  <link rel="apple-touch-icon" href="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>">
+  <link id="browserFavicon" rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
+  <link rel="shortcut icon" type="image/png" href="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
+  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz">
   
   <!-- Tailwind CSS, Chart.js & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,6 +50,56 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
 
+  <!-- FULL SCREEN BRANDED LOADING SCREEN (Prevents Blank Screen on Open) -->
+  <div id="fullScreenLoader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 text-white transition-opacity duration-500 p-4">
+    <div class="relative flex items-center justify-center mb-6">
+      <!-- Outer Glowing Pulsing Effect -->
+      <div class="absolute w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-indigo-500/25 animate-ping"></div>
+      
+      <!-- Logo Container -->
+      <div class="relative w-24 h-24 sm:w-28 sm:h-28 bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/20 shadow-2xl flex items-center justify-center">
+        <img id="loaderDistrictLogo" 
+             src="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz" 
+             alt="District Logo" 
+             class="w-full h-full object-contain filter drop-shadow-md"
+             onerror="this.src='https://placehold.co/100x100?text=DepEd';">
+      </div>
+    </div>
+
+    <!-- District Details & Dynamic Loading Phrases -->
+    <div class="text-center space-y-2.5 max-w-sm px-4">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-indigo-200 text-[10px] font-semibold tracking-wider uppercase border border-white/10">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span id="loaderRegionText">DepEd Region I • La Union</span>
+      </div>
+      
+      <h2 id="loaderDistrictTitle" class="text-xl sm:text-2xl font-black tracking-tight text-white leading-tight">
+        Aringay District
+      </h2>
+      <p class="text-xs text-indigo-200 font-medium">Learning Resources (LRs) Repository</p>
+
+      <!-- Spinner & Cycling Text -->
+      <div class="pt-4 flex flex-col items-center">
+        <div class="flex items-center justify-center gap-2 mb-2 text-indigo-300">
+          <i class="fa-solid fa-circle-notch fa-spin text-sm text-amber-400"></i>
+          <span id="loading-phrase" class="text-xs sm:text-sm font-semibold tracking-wide text-white">Connecting to Learning Resources repository...</span>
+        </div>
+        <p class="text-[11px] text-slate-400 font-mono">
+          Loading system data... (<span id="elapsedSecs">0</span>s)
+        </p>
+      </div>
+
+      <!-- Extended Timeout Reconnect Hint -->
+      <div id="timeout-hint" class="hidden mt-4 p-3 bg-amber-500/10 border border-amber-400/30 rounded-xl text-xs text-amber-200">
+        <p class="font-semibold mb-1"><i class="fa-solid fa-triangle-exclamation"></i> Taking longer than usual?</p>
+        <p class="text-[11px] text-amber-300 mb-2">Check internet connection or force reload.</p>
+        <button onclick="fetchData()" class="px-3.5 py-1.5 bg-amber-500 text-slate-900 rounded-lg font-bold hover:bg-amber-400 transition text-xs shadow">
+          Force Reconnect
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 via-indigo-800 to-indigo-900 text-white shadow-lg sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-3">
@@ -39,7 +107,7 @@
       <!-- Dynamic Brand & District Logo -->
       <div class="flex items-center space-x-3">
         <img id="headerDistrictLogo" 
-             src="<?= (typeof config !== 'undefined' && config.logoUrl) ? config.logoUrl : 'https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz' ?>" 
+             src="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz" 
              alt="District Logo" 
              class="w-10 h-10 sm:w-12 sm:h-12 object-contain bg-white/10 rounded-full p-1 border border-white/20 shadow-sm cursor-pointer shrink-0"
              onclick="openLightbox(this.src)"
@@ -47,14 +115,14 @@
         <div>
           <div class="flex items-center gap-1.5">
             <span id="headerRegion" class="text-[10px] uppercase tracking-widest text-indigo-200 font-semibold">
-              DepEd <?= (typeof config !== 'undefined' && config.region) ? config.region : 'Region I' ?>
+              DepEd Region I
             </span>
             <span id="headerDivision" class="text-[9px] bg-indigo-500/40 px-1.5 py-0.2 rounded text-indigo-100">
-              <?= (typeof config !== 'undefined' && config.division) ? config.division.replace(/^Schools Division of\s*/i, '') : 'La Union' ?>
+              La Union
             </span>
           </div>
           <h1 id="headerDistrictName" class="text-lg sm:text-2xl font-black tracking-tight leading-tight">
-            <?= (typeof config !== 'undefined' && config.districtName) ? config.districtName : 'Aringay District' ?>
+            Aringay District
           </h1>
           <p class="text-[10px] sm:text-xs text-indigo-200">Learning Resources (LRs) Repository</p>
         </div>
@@ -100,22 +168,6 @@
       </div>
       <button onclick="fetchData()" class="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-lg shrink-0">
         Retry Now
-      </button>
-    </div>
-  </div>
-
-  <!-- Loading State with Real-Time Seconds Counter -->
-  <div id="loader" class="flex flex-col items-center justify-center my-auto py-20 px-4 text-center">
-    <div class="text-5xl animate-bounce mb-3" id="loading-emoji">📚</div>
-    <div class="animate-spin rounded-full h-10 w-10 border-4 border-indigo-600 border-t-transparent mb-3"></div>
-    <p id="loading-text" class="text-sm font-semibold text-slate-700">Connecting to Learning Resources repository...</p>
-    <p id="loading-timer" class="text-xs text-slate-400 mt-1">Connecting... (<span id="elapsedSecs">0</span>s)</p>
-
-    <div id="timeout-hint" class="hidden mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 max-w-sm">
-      <p class="font-semibold mb-1"><i class="fa-solid fa-triangle-exclamation"></i> Taking longer than usual?</p>
-      <p class="text-[11px] text-amber-700 mb-2">Click below to force reconnect.</p>
-      <button onclick="fetchData()" class="px-3 py-1.5 bg-amber-600 text-white rounded-lg font-bold hover:bg-amber-700">
-        Force Reconnect
       </button>
     </div>
   </div>
@@ -169,7 +221,7 @@
               </button>
             </div>
 
-            <!-- High-Visibility Emerald Print District Report Button -->
+            <!-- Print District Report Button -->
             <button onclick="openDistrictPrintModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md hover:shadow-lg ring-2 ring-emerald-400/40 transition active:scale-95">
               <i class="fa-solid fa-print text-amber-300 text-sm"></i> <span>Print Report</span>
             </button>
@@ -246,7 +298,7 @@
         </div>
       </div>
 
-      <!-- Active School Card Banner (Preloaded Logo & KPIs) -->
+      <!-- Active School Card Banner -->
       <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white rounded-2xl p-4 sm:p-6 shadow-md border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
         
         <div class="flex items-center gap-4 text-center sm:text-left">
@@ -315,7 +367,7 @@
               </button>
             </div>
 
-            <!-- High-Visibility Emerald Print School Inventory Button -->
+            <!-- Print School Inventory Button -->
             <button onclick="openSchoolPrintModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md hover:shadow-lg ring-2 ring-emerald-400/40 transition active:scale-95">
               <i class="fa-solid fa-print text-amber-300 text-sm"></i> <span>Print School Inventory</span>
             </button>
@@ -814,7 +866,7 @@
   </button>
 
   <footer class="bg-white border-t border-slate-200 py-3.5 text-center text-xs text-slate-500 mt-auto">
-    <span id="footerDistrictLabel">DepEd Learning Resources Management System</span> • Powered by Google Apps Script
+    <span id="footerDistrictLabel">DepEd Aringay District Learning Resources Management System</span> • Powered by Google Apps Script
   </footer>
 
   <script>
@@ -845,10 +897,10 @@
     let currentFilteredSchoolBooks = [];
 
     const loadingPhrases = [
-      { emoji: "📚", text: "Connecting to Learning Resources repository..." },
-      { emoji: "🏫", text: "Loading School Data and distribution..." },
-      { emoji: "🎒", text: "Sorting titles by grade level & title..." },
-      { emoji: "✨", text: "Preparing Learning Resources portal..." }
+      { text: "Connecting to Learning Resources repository..." },
+      { text: "Loading School Data and book distributions..." },
+      { text: "Sorting titles by grade level & subject..." },
+      { text: "Preparing Learning Resources portal..." }
     ];
     let phraseTimer = null;
     let elapsedTimer = null;
@@ -866,8 +918,10 @@
 
     function startLoadingAnimation() {
       document.getElementById('error-banner').classList.add('hidden');
-      document.getElementById('loader').classList.remove('hidden');
-      document.getElementById('dashboard').classList.add('hidden');
+      const fsLoader = document.getElementById('fullScreenLoader');
+      if (fsLoader) {
+        fsLoader.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+      }
       document.getElementById('timeout-hint').classList.add('hidden');
       
       startTime = Date.now();
@@ -877,9 +931,9 @@
       if (phraseTimer) clearInterval(phraseTimer);
       phraseTimer = setInterval(() => {
         index = (index + 1) % loadingPhrases.length;
-        document.getElementById('loading-emoji').innerText = loadingPhrases[index].emoji;
-        document.getElementById('loading-text').innerText = loadingPhrases[index].text;
-      }, 1500);
+        const phraseEl = document.getElementById('loading-phrase');
+        if (phraseEl) phraseEl.innerText = loadingPhrases[index].text;
+      }, 1400);
 
       if (elapsedTimer) clearInterval(elapsedTimer);
       elapsedTimer = setInterval(() => {
@@ -894,7 +948,14 @@
     function stopLoadingAnimation() {
       if (phraseTimer) clearInterval(phraseTimer);
       if (elapsedTimer) clearInterval(elapsedTimer);
-      document.getElementById('loader').classList.add('hidden');
+      
+      const fsLoader = document.getElementById('fullScreenLoader');
+      if (fsLoader) {
+        fsLoader.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+          fsLoader.classList.add('hidden');
+        }, 500);
+      }
       document.getElementById('refresh-icon').classList.remove('fa-spin');
     }
 
@@ -952,7 +1013,7 @@
       document.getElementById('error-message').innerText = msg;
     }
 
-    // SILENT IMAGE PRELOADER (Instant rendering for books and logos)
+    // SILENT IMAGE PRELOADER
     function preloadImagesSilently(data) {
       setTimeout(() => {
         const urls = [];
@@ -974,12 +1035,14 @@
         globalData = data;
         document.getElementById('dashboard').classList.remove('hidden');
 
-        // Dynamically Apply District Config (Not hardcoded)
+        // Dynamically Apply District Config
         if (data.config) {
           const cfg = data.config;
           if (cfg.districtName) {
             const hDist = document.getElementById('headerDistrictName');
             if (hDist) hDist.innerText = cfg.districtName;
+            const lDist = document.getElementById('loaderDistrictTitle');
+            if (lDist) lDist.innerText = cfg.districtName;
             document.title = cfg.districtName + ' LRs';
             const footerLabel = document.getElementById('footerDistrictLabel');
             if (footerLabel) footerLabel.innerText = 'DepEd ' + cfg.districtName + ' Learning Resources System';
@@ -995,6 +1058,8 @@
           if (cfg.logoUrl) {
             const hLogo = document.getElementById('headerDistrictLogo');
             if (hLogo) hLogo.src = cfg.logoUrl;
+            const lLogo = document.getElementById('loaderDistrictLogo');
+            if (lLogo) lLogo.src = cfg.logoUrl;
             const fav = document.getElementById('browserFavicon');
             if (fav) fav.href = cfg.logoUrl;
           }
@@ -1786,641 +1851,3 @@
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: 'update', payload: payload })
-        })
-        .then(res => res.json())
-        .then(onResult)
-        .catch(onError);
-      }
-    }
-
-    function handleDeleteCurrentBook() {
-      const bookTitle = document.getElementById('editFormTitle').value.trim();
-      const password = document.getElementById('editFormPassword').value.trim();
-
-      if (!password) {
-        alert("Please enter the Admin Password to authorize deleting this resource.");
-        document.getElementById('editFormPassword').focus();
-        return;
-      }
-
-      if (!confirm(`Are you sure you want to permanently DELETE "${bookTitle}" from the repository? This action cannot be undone.`)) {
-        return;
-      }
-
-      const btnDelete = document.getElementById('btn-delete');
-      btnDelete.disabled = true;
-      btnDelete.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Deleting...`;
-
-      const payload = {
-        password: password,
-        rowIndex: Number(document.getElementById('editRowIndex').value),
-        title: document.getElementById('editOriginalTitle').value || bookTitle
-      };
-
-      const onResult = raw => {
-        btnDelete.disabled = false;
-        btnDelete.innerHTML = `<i class="fa-solid fa-trash-can"></i> Delete Resource`;
-
-        const res = (typeof raw === 'string') ? JSON.parse(raw) : raw;
-        if (res && res.success) {
-          closeEditModal();
-          fetchData();
-        } else {
-          alert(res ? res.message : "Error deleting record");
-        }
-      };
-
-      const onError = err => {
-        btnDelete.disabled = false;
-        btnDelete.innerHTML = `<i class="fa-solid fa-trash-can"></i> Delete Resource`;
-        alert("Server error: " + err.message);
-      };
-
-      if (isAppsScriptEnv) {
-        google.script.run.withSuccessHandler(onResult).withFailureHandler(onError).deleteBookRecord(payload);
-      } else {
-        fetch(APPS_SCRIPT_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'delete', payload: payload })
-        })
-        .then(res => res.json())
-        .then(onResult)
-        .catch(onError);
-      }
-    }
-
-    // ==========================================
-    // PRINT REPORTS (DYNAMIC DISTRICT & SCHOOL)
-    // ==========================================
-    function openDistrictPrintModal() {
-      document.getElementById('printDistrictCount').innerText = currentFilteredDistrictBooks.length;
-      document.getElementById('districtPrintModal').classList.remove('hidden');
-    }
-
-    function closeDistrictPrintModal() {
-      document.getElementById('districtPrintModal').classList.add('hidden');
-    }
-
-    function executeDistrictPrint() {
-      const prepBy = document.getElementById('districtPreparedBy').value.trim() || 'District Property Custodian';
-      const certBy = document.getElementById('districtCertifiedBy').value.trim() || 'Public Schools District Supervisor';
-      closeDistrictPrintModal();
-
-      const districtName = (globalData && globalData.config && globalData.config.districtName) ? globalData.config.districtName : 'Aringay District';
-      const region = (globalData && globalData.config && globalData.config.region) ? globalData.config.region : 'Region I';
-      const division = (globalData && globalData.config && globalData.config.division) ? globalData.config.division : 'Schools Division of La Union';
-      const logoUrl = (globalData && globalData.config && globalData.config.logoUrl) ? globalData.config.logoUrl : '';
-
-      const booksToPrint = currentFilteredDistrictBooks;
-      const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-      let totalCopies = 0;
-
-      let rowsHtml = '';
-      booksToPrint.forEach((b, idx) => {
-        totalCopies += Number(b.total || 0);
-        rowsHtml += `
-          <tr style="border-bottom: 1px solid #cbd5e1;">
-            <td style="padding: 6px 8px; text-align: center;">${idx + 1}</td>
-            <td style="padding: 6px 8px; font-weight: bold;">${escapeHtml(b.title)}</td>
-            <td style="padding: 6px 8px;">${escapeHtml(b.subject)}</td>
-            <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.grade)}</td>
-            <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.deliveryNo) || '-'}</td>
-            <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.iarNo) || '-'}</td>
-            <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.dateReceived) || '-'}</td>
-            <td style="padding: 6px 8px; text-align: right; font-weight: bold;">${Number(b.total || 0).toLocaleString()}</td>
-          </tr>
-        `;
-      });
-
-      const printHtml = `
-        <div style="font-family: Arial, sans-serif; font-size: 11px; color: #000; line-height: 1.4;">
-          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 14px;">
-            ${logoUrl ? `<img src="${logoUrl}" style="width: 55px; height: 55px; object-fit: contain;">` : `<div style="width: 55px;"></div>`}
-            <div style="text-align: center; flex: 1;">
-              <div style="font-size: 11px; text-transform: uppercase;">Republic of the Philippines</div>
-              <div style="font-size: 13px; font-weight: bold; text-transform: uppercase;">Department of Education</div>
-              <div style="font-size: 11px;">DepEd ${escapeHtml(region)} • ${escapeHtml(division)}</div>
-              <div style="font-size: 13px; font-weight: bold; letter-spacing: 1px; margin-top: 2px; text-transform: uppercase;">${escapeHtml(districtName)}</div>
-              <div style="font-size: 14px; font-weight: 900; margin-top: 6px; text-decoration: underline;">DISTRICT LEARNING RESOURCES (LRs) INVENTORY REPORT</div>
-              <div style="font-size: 10px; color: #475569; margin-top: 2px;">Date Generated: ${today} • Total Titles: ${booksToPrint.length} • Total Volume: ${totalCopies.toLocaleString()} copies</div>
-            </div>
-            <div style="width: 55px;"></div>
-          </div>
-
-          <table style="width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 25px;">
-            <thead>
-              <tr style="background-color: #f1f5f9; border-top: 1px solid #000; border-bottom: 1.5px solid #000; text-transform: uppercase;">
-                <th style="padding: 6px 8px; text-align: center; width: 30px;">#</th>
-                <th style="padding: 6px 8px; text-align: left;">Resource / Book Title</th>
-                <th style="padding: 6px 8px; text-align: left; width: 90px;">Subject</th>
-                <th style="padding: 6px 8px; text-align: center; width: 65px;">Grade</th>
-                <th style="padding: 6px 8px; text-align: center; width: 85px;">DR #</th>
-                <th style="padding: 6px 8px; text-align: center; width: 80px;">IAR #</th>
-                <th style="padding: 6px 8px; text-align: center; width: 75px;">Date Rec'd</th>
-                <th style="padding: 6px 8px; text-align: right; width: 65px;">Copies</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-              <tr style="border-top: 2px solid #000; font-weight: bold; background-color: #f8fafc;">
-                <td colspan="7" style="padding: 8px; text-align: right; text-transform: uppercase;">District Grand Total:</td>
-                <td style="padding: 8px; text-align: right; font-size: 11px;">${totalCopies.toLocaleString()}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div style="display: flex; justify-content: space-between; margin-top: 40px; page-break-inside: avoid;">
-            <div style="width: 42%; text-align: left;">
-              <div style="font-size: 10px; margin-bottom: 35px;">Prepared by:</div>
-              <div style="font-size: 12px; font-weight: bold; text-decoration: underline; text-transform: uppercase;">${escapeHtml(prepBy)}</div>
-              <div style="font-size: 10px; color: #334155;">District Property Custodian</div>
-            </div>
-
-            <div style="width: 42%; text-align: left;">
-              <div style="font-size: 10px; margin-bottom: 35px;">Certified Correct by:</div>
-              <div style="font-size: 12px; font-weight: bold; text-decoration: underline; text-transform: uppercase;">${escapeHtml(certBy)}</div>
-              <div style="font-size: 10px; color: #334155;">Public Schools District Supervisor</div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      const printArea = document.getElementById('printArea');
-      printArea.innerHTML = printHtml;
-      window.print();
-    }
-
-    function openSchoolPrintModal() {
-      if (!currentSelectedSchool) return;
-      document.getElementById('printSchoolTargetName').innerText = "School: " + currentSelectedSchool;
-      document.getElementById('printSchoolCount').innerText = currentFilteredSchoolBooks.length;
-      document.getElementById('schoolPrintModal').classList.remove('hidden');
-    }
-
-    function closeSchoolPrintModal() {
-      document.getElementById('schoolPrintModal').classList.add('hidden');
-    }
-
-    function executeSchoolPrint() {
-      const prepBy = document.getElementById('schoolPreparedBy').value.trim() || 'School Property Custodian';
-      const certBy = document.getElementById('schoolCertifiedBy').value.trim() || 'School Head';
-      closeSchoolPrintModal();
-
-      const districtName = (globalData && globalData.config && globalData.config.districtName) ? globalData.config.districtName : 'Aringay District';
-      const region = (globalData && globalData.config && globalData.config.region) ? globalData.config.region : 'Region I';
-      const division = (globalData && globalData.config && globalData.config.division) ? globalData.config.division : 'Schools Division of La Union';
-      const districtLogoUrl = (globalData && globalData.config && globalData.config.logoUrl) ? globalData.config.logoUrl : '';
-
-      const schoolObj = (globalData.schoolList || []).find(s => s.name.trim().toLowerCase() === currentSelectedSchool.trim().toLowerCase());
-      const schoolLogoUrl = (schoolObj && schoolObj.logoUrl) ? schoolObj.logoUrl : '';
-
-      const booksToPrint = currentFilteredSchoolBooks;
-      const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-      let totalSchoolCopies = 0;
-
-      let rowsHtml = '';
-      booksToPrint.forEach((b, idx) => {
-        const qty = (b.distribution && b.distribution[currentSelectedSchool]) ? Number(b.distribution[currentSelectedSchool]) : 0;
-        totalSchoolCopies += qty;
-        rowsHtml += `
-          <tr style="border-bottom: 1px solid #cbd5e1;">
-            <td style="padding: 6px 8px; text-align: center;">${idx + 1}</td>
-            <td style="padding: 6px 8px; font-weight: bold;">${escapeHtml(b.title)}</td>
-            <td style="padding: 6px 8px;">${escapeHtml(b.subject)}</td>
-            <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.grade)}</td>
-            <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.deliveryNo) || '-'}</td>
-            <td style="padding: 6px 8px; text-align: center;">${escapeHtml(b.iarNo) || '-'}</td>
-            <td style="padding: 6px 8px; text-align: right; font-weight: bold;">${qty.toLocaleString()}</td>
-          </tr>
-        `;
-      });
-
-      const printHtml = `
-        <div style="font-family: Arial, sans-serif; font-size: 11px; color: #000; line-height: 1.4;">
-          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 14px;">
-            ${districtLogoUrl ? `<img src="${districtLogoUrl}" style="width: 50px; height: 50px; object-fit: contain;">` : `<div style="width: 50px;"></div>`}
-            <div style="text-align: center; flex: 1;">
-              <div style="font-size: 11px; text-transform: uppercase;">Republic of the Philippines • Department of Education</div>
-              <div style="font-size: 11px;">DepEd ${escapeHtml(region)} • ${escapeHtml(division)} • ${escapeHtml(districtName)}</div>
-              <div style="font-size: 14px; font-weight: 900; letter-spacing: 0.5px; margin-top: 2px; text-transform: uppercase;">${escapeHtml(currentSelectedSchool)}</div>
-              <div style="font-size: 13px; font-weight: bold; margin-top: 4px; text-decoration: underline;">SCHOOL LEARNING RESOURCES ALLOCATION INVENTORY</div>
-              <div style="font-size: 10px; color: #475569; margin-top: 2px;">Date: ${today} • Allocated Titles: ${booksToPrint.length} • Total Copies: ${totalSchoolCopies.toLocaleString()}</div>
-            </div>
-            ${schoolLogoUrl ? `<img src="${schoolLogoUrl}" style="width: 50px; height: 50px; object-fit: contain;">` : `<div style="width: 50px;"></div>`}
-          </div>
-
-          <table style="width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 25px;">
-            <thead>
-              <tr style="background-color: #f1f5f9; border-top: 1px solid #000; border-bottom: 1.5px solid #000; text-transform: uppercase;">
-                <th style="padding: 6px 8px; text-align: center; width: 30px;">#</th>
-                <th style="padding: 6px 8px; text-align: left;">Resource / Book Title</th>
-                <th style="padding: 6px 8px; text-align: left; width: 100px;">Subject</th>
-                <th style="padding: 6px 8px; text-align: center; width: 70px;">Grade</th>
-                <th style="padding: 6px 8px; text-align: center; width: 90px;">DR #</th>
-                <th style="padding: 6px 8px; text-align: center; width: 85px;">IAR #</th>
-                <th style="padding: 6px 8px; text-align: right; width: 70px;">Allocated</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-              <tr style="border-top: 2px solid #000; font-weight: bold; background-color: #f8fafc;">
-                <td colspan="6" style="padding: 8px; text-align: right; text-transform: uppercase;">Total Allocated Copies:</td>
-                <td style="padding: 8px; text-align: right; font-size: 11px;">${totalSchoolCopies.toLocaleString()}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div style="display: flex; justify-content: space-between; margin-top: 40px; page-break-inside: avoid;">
-            <div style="width: 42%; text-align: left;">
-              <div style="font-size: 10px; margin-bottom: 35px;">Prepared by:</div>
-              <div style="font-size: 12px; font-weight: bold; text-decoration: underline; text-transform: uppercase;">${escapeHtml(prepBy)}</div>
-              <div style="font-size: 10px; color: #334155;">School Property Custodian</div>
-            </div>
-
-            <div style="width: 42%; text-align: left;">
-              <div style="font-size: 10px; margin-bottom: 35px;">Certified Correct by:</div>
-              <div style="font-size: 12px; font-weight: bold; text-decoration: underline; text-transform: uppercase;">${escapeHtml(certBy)}</div>
-              <div style="font-size: 10px; color: #334155;">School Head</div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      const printArea = document.getElementById('printArea');
-      printArea.innerHTML = printHtml;
-      window.print();
-    }
-
-    // Lightbox
-    function openLightbox(imgUrl) {
-      if (!imgUrl) return;
-      document.getElementById('lightboxImage').src = imgUrl;
-      document.getElementById('lightboxModal').classList.remove('hidden');
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightboxModal').classList.add('hidden');
-    }
-
-    // Admin Modal
-    function openAdminModal() {
-      document.getElementById('adminForm').reset();
-      document.getElementById('formDate').value = new Date().toISOString().split('T')[0];
-      recalcAdminTotal();
-      document.getElementById('adminModal').classList.remove('hidden');
-    }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').classList.add('hidden');
-    }
-
-    function buildAdminSchoolInputs(schoolList) {
-      const container = document.getElementById('schoolInputsContainer');
-      container.innerHTML = '';
-
-      if (!schoolList || !schoolList.length) {
-        container.innerHTML = `<p class="text-xs text-slate-400 col-span-3">No school columns detected.</p>`;
-        return;
-      }
-
-      schoolList.forEach(s => {
-        const div = document.createElement('div');
-        div.className = "flex flex-col bg-white p-2 rounded-lg border border-slate-200";
-        div.innerHTML = `
-          <label class="text-[10px] sm:text-[11px] font-semibold text-slate-700 truncate mb-1" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</label>
-          <input type="number" min="0" value="0" data-school="${escapeHtml(s.name)}" oninput="recalcAdminTotal()"
-            class="school-input text-xs border border-slate-300 rounded px-2 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:outline-none text-right font-semibold">
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function recalcAdminTotal() {
-      let total = 0;
-      const inputs = document.querySelectorAll('.school-input');
-      inputs.forEach(input => {
-        total += Number(input.value) || 0;
-      });
-      document.getElementById('formCalculatedTotal').innerText = total.toLocaleString();
-    }
-
-    function handleAdminSubmit(e) {
-      e.preventDefault();
-
-      const btnSave = document.getElementById('btn-save');
-      btnSave.disabled = true;
-      btnSave.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
-
-      const schoolDist = {};
-      const inputs = document.querySelectorAll('.school-input');
-      inputs.forEach(input => {
-        const sName = input.getAttribute('data-school');
-        schoolDist[sName] = Number(input.value) || 0;
-      });
-
-      const payload = {
-        password: document.getElementById('formPassword').value.trim(),
-        title: document.getElementById('formTitle').value.trim(),
-        subject: document.getElementById('formSubject').value.trim(),
-        grade: document.getElementById('formGrade').value.trim(),
-        dateReceived: document.getElementById('formDate').value,
-        imageUrl: document.getElementById('formImageUrl').value.trim(),
-        deliveryNo: document.getElementById('formDeliveryNo').value.trim(),
-        iarNo: document.getElementById('formIarNo').value.trim(),
-        schools: schoolDist
-      };
-
-      const onResult = raw => {
-        btnSave.disabled = false;
-        btnSave.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save & Append`;
-
-        const res = (typeof raw === 'string') ? JSON.parse(raw) : raw;
-        if (res && res.success) {
-          closeAdminModal();
-          fetchData();
-        } else {
-          alert(res ? res.message : "Error saving record");
-        }
-      };
-
-      const onError = err => {
-        btnSave.disabled = false;
-        btnSave.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save & Append`;
-        alert("Server error: " + err.message);
-      };
-
-      if (isAppsScriptEnv) {
-        google.script.run.withSuccessHandler(onResult).withFailureHandler(onError).saveBookRecord(payload);
-      } else {
-        fetch(APPS_SCRIPT_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'save', payload: payload })
-        })
-        .then(res => res.json())
-        .then(onResult)
-        .catch(onError);
-      }
-    }
-
-    function populateSubjectFilter(subjects) {
-      const distSelect = document.getElementById('subjectFilter');
-      const schoolSelect = document.getElementById('schoolSubjectFilter');
-      
-      const optionsHtml = '<option value="">All Subjects</option>' + 
-        Object.keys(subjects).sort().map(sub => `<option value="${escapeHtml(sub)}">${escapeHtml(sub)}</option>`).join('');
-
-      if (distSelect) distSelect.innerHTML = optionsHtml;
-      if (schoolSelect) schoolSelect.innerHTML = optionsHtml;
-    }
-
-    function populateSubjectDatalist(existingSubjects) {
-      const datalist = document.getElementById('subjectDatalist');
-      datalist.innerHTML = '';
-      (existingSubjects || []).forEach(sub => {
-        const option = document.createElement('option');
-        option.value = sub;
-        datalist.appendChild(option);
-      });
-    }
-
-    const palette = ['#4f46e5', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#14b8a6', '#f97316', '#6366f1'];
-
-    function renderSubjectPieChart(subjects) {
-      if (chartInstances.subject) chartInstances.subject.destroy();
-      const ctx = document.getElementById('subjectChart').getContext('2d');
-      const labels = Object.keys(subjects);
-      const values = Object.values(subjects);
-      const total = values.reduce((a, b) => a + b, 0) || 1;
-
-      chartInstances.subject = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: labels,
-          datasets: [{ 
-            data: values, 
-            backgroundColor: palette.slice(0, labels.length),
-            borderWidth: 2,
-            borderColor: '#ffffff'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { 
-            legend: { 
-              position: 'bottom', 
-              labels: { boxWidth: 11, padding: 10, font: { size: 10, weight: '600' } } 
-            },
-            tooltip: {
-              callbacks: {
-                label: function(item) {
-                  const val = item.raw || 0;
-                  const pct = ((val / total) * 100).toFixed(1);
-                  return `  ${item.label}: ${val.toLocaleString()} copies (${pct}%)`;
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-
-    function getGradeRankClient(gradeStr) {
-      if (!gradeStr) return 99;
-      const g = String(gradeStr).toLowerCase().trim();
-      if (g.includes('kinder')) return 0;
-      const match = g.match(/\d+/);
-      if (match) return parseInt(match[0], 10);
-      return 99;
-    }
-
-    function renderGradePieChart(gradeLevels) {
-      if (chartInstances.grade) chartInstances.grade.destroy();
-      const ctx = document.getElementById('gradeChart').getContext('2d');
-
-      const sortedKeys = Object.keys(gradeLevels).sort((a, b) => {
-        const rankA = getGradeRankClient(a);
-        const rankB = getGradeRankClient(b);
-        if (rankA !== rankB) return rankA - rankB;
-        return a.localeCompare(b, undefined, { sensitivity: 'base' });
-      });
-
-      const sortedValues = sortedKeys.map(k => gradeLevels[k] || 0);
-      const total = sortedValues.reduce((a, b) => a + b, 0) || 1;
-
-      const gradeColorMap = {
-        'kinder': '#f59e0b',
-        'grade 1': '#10b981',
-        'grade 2': '#06b6d4',
-        'grade 3': '#3b82f6',
-        'grade 4': '#6366f1',
-        'grade 5': '#8b5cf6',
-        'grade 6': '#ec4899'
-      };
-
-      const backgroundColors = sortedKeys.map((k, idx) => {
-        const normalized = k.toLowerCase().trim();
-        return gradeColorMap[normalized] || palette[idx % palette.length];
-      });
-
-      chartInstances.grade = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: sortedKeys,
-          datasets: [{ 
-            data: sortedValues, 
-            backgroundColor: backgroundColors,
-            borderWidth: 2,
-            borderColor: '#ffffff'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { 
-            legend: { 
-              position: 'bottom', 
-              labels: { 
-                boxWidth: 12, 
-                padding: 12,
-                font: { size: 11, weight: '600' } 
-              } 
-            },
-            tooltip: {
-              callbacks: {
-                label: function(item) {
-                  const val = item.raw || 0;
-                  const pct = ((val / total) * 100).toFixed(1);
-                  return `  ${item.label}: ${val.toLocaleString()} copies (${pct}%)`;
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-
-    function renderSchoolRankingChart() {
-      if (!globalData || !globalData.schoolList || !globalData.schoolList.length) return;
-      if (chartInstances.schoolRanking) chartInstances.schoolRanking.destroy();
-
-      const ctx = document.getElementById('schoolRankingChart').getContext('2d');
-
-      const schoolTotals = globalData.schoolList.map(s => {
-        let total = 0;
-        (globalData.books || []).forEach(b => {
-          const qty = (b.distribution && b.distribution[s.name]) ? Number(b.distribution[s.name]) : 0;
-          total += qty;
-        });
-        return { name: s.name, total: total };
-      });
-
-      schoolTotals.sort((a, b) => b.total - a.total);
-
-      const labels = schoolTotals.map(s => s.name);
-      const dataValues = schoolTotals.map(s => s.total);
-      const grandTotal = Number(globalData.kpis.totalBooks) || dataValues.reduce((a, b) => a + b, 0) || 1;
-
-      if (schoolTotals.length > 0 && schoolTotals[0].total > 0) {
-        const topSchoolBadge = document.getElementById('topSchoolBadge');
-        if (topSchoolBadge) {
-          topSchoolBadge.innerHTML = `<i class="fa-solid fa-crown text-amber-500 mr-1"></i> Top Recipient: <b>${escapeHtml(schoolTotals[0].name)}</b> (${schoolTotals[0].total.toLocaleString()} copies)`;
-          topSchoolBadge.classList.remove('hidden');
-        }
-      }
-
-      const backgroundColors = schoolTotals.map((s, idx) => {
-        if (idx === 0) return '#f59e0b';
-        if (idx === 1) return '#10b981';
-        if (idx === 2) return '#6366f1';
-        return '#3b82f6';
-      });
-
-      chartInstances.schoolRanking = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Copies Allocated',
-            data: dataValues,
-            backgroundColor: backgroundColors,
-            borderRadius: 6,
-            borderSkipped: false,
-            barPercentage: 0.72,
-            categoryPercentage: 0.82
-          }]
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { 
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#0f172a',
-              titleFont: { size: 12, weight: 'bold' },
-              bodyFont: { size: 11 },
-              padding: 10,
-              cornerRadius: 8,
-              callbacks: {
-                title: function(items) {
-                  const idx = items[0].dataIndex;
-                  return `#${idx + 1} - ${labels[idx]}`;
-                },
-                label: function(item) {
-                  const val = item.raw || 0;
-                  const pct = ((val / grandTotal) * 100).toFixed(1);
-                  return `  ${val.toLocaleString()} copies (${pct}% of district)`;
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              beginAtZero: true,
-              grid: { color: '#f1f5f9' },
-              ticks: {
-                font: { size: 10, weight: '500' },
-                callback: function(val) {
-                  return Number(val).toLocaleString();
-                }
-              }
-            },
-            y: {
-              grid: { display: false },
-              ticks: {
-                font: { size: 11, weight: '600' },
-                color: '#1e293b'
-              }
-            }
-          }
-        }
-      });
-    }
-
-    window.addEventListener('scroll', () => {
-      const btn = document.getElementById('backToTopBtn');
-      if (window.scrollY > 220) {
-        btn.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-3');
-        btn.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
-      } else {
-        btn.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
-        btn.classList.add('opacity-0', 'pointer-events-none', 'translate-y-3');
-      }
-    });
-
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Instant Fetch
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', fetchData);
-    } else {
-      fetchData();
-    }
-  </script>
-</body>
-</html>
