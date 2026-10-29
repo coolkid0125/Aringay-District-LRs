@@ -31,142 +31,24 @@
       height: 100%;
       height: 100dvh;
       overflow: hidden;
-      background-color: #0f172a;
+      background-color: #020617; /* Seamless dark match to the new loader */
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    /* Seamless Full-Screen Portal Frame */
+    /* Direct Full-Screen Portal iFrame */
     #portalFrame {
       width: 100%;
       height: 100%;
       height: 100dvh;
       border: none;
       display: block;
-      background-color: #f8fafc;
-      opacity: 0;
-      transition: opacity 0.35s ease;
-    }
-
-    #portalFrame.loaded {
-      opacity: 1;
-    }
-
-    /* Elegant Fullscreen Branded Loader */
-    #loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #172554 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      z-index: 9999;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-      padding: 20px;
-      text-align: center;
-    }
-
-    #loader.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .spinner-wrap {
-      position: relative;
-      width: 90px;
-      height: 90px;
-      margin-bottom: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .spinner-ring {
-      position: absolute;
-      width: 90px;
-      height: 90px;
-      border: 3.5px solid rgba(99, 102, 241, 0.2);
-      border-top-color: #f59e0b;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    .logo-img {
-      width: 58px;
-      height: 58px;
-      border-radius: 14px;
-      object-fit: contain;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 6px;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .portal-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #c7d2fe;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .portal-title {
-      font-size: 1.35rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      color: #ffffff;
-      margin-bottom: 4px;
-    }
-
-    .portal-subtitle {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      font-weight: 500;
-      margin-bottom: 16px;
-    }
-
-    .loading-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      color: #cbd5e1;
-      font-weight: 600;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+      background-color: transparent;
     }
   </style>
 </head>
 <body>
 
-  <!-- Loading Screen -->
-  <div id="loader">
-    <div class="spinner-wrap">
-      <div class="spinner-ring"></div>
-      <img class="logo-img" src="https://lh3.googleusercontent.com/d/10n6hhXkz9UakP67VG4mlby0_4YaIS7lz" alt="District Logo" onerror="this.style.display='none'">
-    </div>
-    <div class="portal-badge">DepEd Region I • La Union</div>
-    <div class="portal-title">Aringay District</div>
-    <div class="portal-subtitle">Learning Resources (LRs) Repository</div>
-    <div class="loading-status">
-      <span>Connecting to repository...</span>
-    </div>
-  </div>
-
-  <!-- Full-Screen Portal iFrame (Method 2: Wrapper) -->
+  <!-- Direct iframe straight to the new loading screen -->
   <iframe 
     id="portalFrame"
     src="https://script.google.com/macros/s/AKfycbwFmFTs1C53mTM4nk56nBOM1bnCjszvn96padGs1Frrh7_EcR4de321hDbOaaNIBh8SzA/exec" 
@@ -174,23 +56,5 @@
     title="DepEd Aringay District LRs">
   </iframe>
 
-  <script>
-    const iframe = document.getElementById('portalFrame');
-    const loader = document.getElementById('loader');
-
-    // Fade out loader once the live portal is ready
-    iframe.addEventListener('load', function() {
-      iframe.classList.add('loaded');
-      setTimeout(function() {
-        loader.classList.add('hidden');
-      }, 250);
-    });
-
-    // Failsafe timeout in case iframe onload event is slow to report
-    setTimeout(function() {
-      loader.classList.add('hidden');
-      iframe.classList.add('loaded');
-    }, 4000);
-  </script>
 </body>
 </html>
